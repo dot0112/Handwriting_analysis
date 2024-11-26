@@ -7,13 +7,13 @@ from pathlib import Path
 from tqdm import tqdm
 
 
-rootDir = Path("E:/diff_shape_korean_data/data/Training")
+rootDir = Path("/tf/data/dataset/diff_shape_korean_data/data/Training")
 subDir = Path("handWriting/char")
 
 originalSourceDataDir = rootDir / "source" / subDir
 originalLabelDataDir = rootDir / "label" / subDir
 
-saveRootDir = Path("E:/augment_data")
+saveRootDir = Path("/tf/data/augment")
 augSourceSaveDir = saveRootDir / "source"
 augLabelSaveDir = saveRootDir / "label"
 
@@ -58,6 +58,9 @@ def get_datas():
 def create_augment_file(writerNo, imagePath):
     totalCreatedCount = 0
     imageName = Path(imagePath).stem
+
+    if Path.exists(augSourceSaveDir / f"{imageName}_0.jpg"):
+        return totalCreatedCount
 
     augmented_list = augment_data.augment_images(image_path=imagePath)
 

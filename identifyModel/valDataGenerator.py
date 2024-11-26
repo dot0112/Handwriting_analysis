@@ -18,7 +18,7 @@ def add_padding(image: Image.Image, new_size=110, color=(255, 255, 255)):
     return result
 
 
-rootDir = Path("E:/diff_shape_korean_data/data/")
+rootDir = Path("/tf/data/dataset/diff_shape_korean_data/data/")
 
 valLabelDir = rootDir / "Validation" / "label" / "handWriting" / "char"
 valSourceDir = rootDir / "Validation" / "source" / "handWriting" / "char"
@@ -29,15 +29,16 @@ wordSourceDir = rootDir / "Training" / "source" / "handWriting" / "word"
 # 각 인덱스 주소에서 랜덤한 100개의 데이터 선택 후 val 데이터 생성
 i = 0
 
-for idx in tqdm(range(1, 153), desc="전체 진행률"):
+for idx in tqdm(range(1, 153), desc="전체 진행률", position=0, leave=True):
     idxStr = f"{idx:03d}"
     labelPaths = list(Path(wordLabelDir / idxStr).glob("*.json"))
-    random_sample = random.sample(labelPaths, min(len(labelPaths), 100))
+    random_sample = random.sample(labelPaths, min(len(labelPaths), 300))
 
     (valSourceDir / idxStr).mkdir(parents=True, exist_ok=True)
     (valLabelDir / idxStr).mkdir(parents=True, exist_ok=True)
 
-    for labelPath in tqdm(random_sample, desc=f"폴더 {idxStr} 처리 중", leave=False):
+    # Nested progress bar for each folder
+    for labelPath in tqdm(random_sample, desc=f"폴더 {idxStr} 처리 중", position=1, leave=False):
         with open(labelPath, "r", encoding="utf-8") as file:
             data = orjson.loads(file.read())
 

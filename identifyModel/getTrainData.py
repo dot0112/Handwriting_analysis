@@ -1,29 +1,41 @@
 import orjson
 import random
+import os
 import concurrent.futures
+import numpy as np
 from pathlib import Path
 from tqdm import tqdm
 
-rootDir = Path("E:/augment_data/")
+rootDir = Path("/tf/data/augment")
 
 sourceDataDir = rootDir / "source"
 labelDataDir = rootDir / "label"
 
 
 def get_label_paths(Dir: Path):
-    label_paths = [str(path) for path in Dir.glob("*.json")]
-    random.shuffle(label_paths)
+    label_paths = [os.path.join(Dir, f) for f in os.listdir(Dir) if f.endswith(".json")]
+    print("data shuffle")
+    label_paths = np.random.permutation(label_paths)
     return label_paths
 
 
 def get_data(label_path):
-    with open(label_path, "r", encoding="utf-8") as file:
-        data = orjson.loads(file.read())
-
-        imageFileName = data["image"]["file_name"]
-        writerNo = data["license"]["writer_no"]
-
-    return (writerNo, sourceDataDir / imageFileName)
+    if not Path(label_path).exists():
+        return None
+    try:
+        with open(label_path, "r", encoding="utf-8") as file:
+            data = orjson.loads(file.read())
+            imageFileName = data["image"]["file_name"]
+            writerNo = data["license"]["writer_no"]
+        return (writerNo, sourceDataDir / imageFileName)
+    except orjson.JSONDecodeError:
+        # 잘못된 JSON 파일 처리
+        print(f"Warning: Invalid JSON format in {label_path}")
+        return None
+    except KeyError as e:
+        # 예상치 못한 키 오류 처리
+        print(f"Warning: Missing key {e} in {label_path}")
+        return None
 
 
 def get_datas():
@@ -41,7 +53,9 @@ def get_datas():
             desc=f"[get_datas]",
             unit="file",
         ):
-            writerNo, imagePath = future.result()
-            datas.append((writerNo, imagePath))
+            result = future.result()
+            if result is not None:
+                writerNo, imagePath = result
+                datas.append((writerNo, imagePath))
 
     return datas

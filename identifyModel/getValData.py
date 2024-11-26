@@ -4,7 +4,7 @@ import concurrent.futures
 from pathlib import Path
 from tqdm import tqdm
 
-rootDir = Path("E:/diff_shape_korean_data/data/Validation")
+rootDir = Path("/tf/data/dataset/diff_shape_korean_data/data/Validation")
 subDir = Path("handWriting/char")
 
 sourceDataDir = rootDir / "source" / subDir

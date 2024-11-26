@@ -72,9 +72,20 @@ if isTrain:
 
         return callbackList
 
+    print("****************************************")
+    print("Getting Training Data")
     trainDatas = getTrainData.get_datas()
+    
+    print("****************************************")
+    print("Getting Validation Data")
     valDatas = getValData.getDatas()
+    
+    print("****************************************")
+    print("Creating Training Dataset")
     trainingDataset = createDataset.create_dataset(trainDatas).repeat()
+    
+    print("****************************************")
+    print("Creating Validation Dataset")
     valDataset = createDataset.create_dataset(valDatas)
 
     model.fit(
