@@ -38,11 +38,11 @@ if isTrain:
     if os.path.isfile(modelPath):
         print("Loading existing model")
         loadedModel = keras.models.load_model(modelPath)
-        model = createModel.createNewPredictionModel()
+        model = createModel.createNewPredictionModel_vgg11()
         model.set_weights(loadedModel.get_weights())
     else:
         print("Creating new model")
-        model = createModel.createNewPredictionModel()
+        model = createModel.createNewPredictionModel_vgg11()
 
     print("****************************************")
     print("Start training for %g epochs" % trainEpochs)
@@ -75,15 +75,15 @@ if isTrain:
     print("****************************************")
     print("Getting Training Data")
     trainDatas = getTrainData.get_datas()
-    
+
     print("****************************************")
     print("Getting Validation Data")
     valDatas = getValData.getDatas()
-    
+
     print("****************************************")
     print("Creating Training Dataset")
     trainingDataset = createDataset.create_dataset(trainDatas).repeat()
-    
+
     print("****************************************")
     print("Creating Validation Dataset")
     valDataset = createDataset.create_dataset(valDatas)

@@ -3,6 +3,11 @@ import orjson
 from PIL import Image
 from pathlib import Path
 from tqdm import tqdm
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+con = os.environ.get("con")
 
 
 def add_padding(image: Image.Image, new_size=110, color=(255, 255, 255)):
@@ -18,7 +23,11 @@ def add_padding(image: Image.Image, new_size=110, color=(255, 255, 255)):
     return result
 
 
-rootDir = Path("/tf/data/dataset/diff_shape_korean_data/data/")
+rootDir = (
+    Path("/tf/data/dataset/diff_shape_korean_data/data/")
+    if con == "0"
+    else Path("e:/diff_shape_korean_data/data/")
+)
 
 valLabelDir = rootDir / "Validation" / "label" / "handWriting" / "char"
 valSourceDir = rootDir / "Validation" / "source" / "handWriting" / "char"
@@ -38,7 +47,9 @@ for idx in tqdm(range(1, 153), desc="전체 진행률", position=0, leave=True):
     (valLabelDir / idxStr).mkdir(parents=True, exist_ok=True)
 
     # Nested progress bar for each folder
-    for labelPath in tqdm(random_sample, desc=f"폴더 {idxStr} 처리 중", position=1, leave=False):
+    for labelPath in tqdm(
+        random_sample, desc=f"폴더 {idxStr} 처리 중", position=1, leave=False
+    ):
         with open(labelPath, "r", encoding="utf-8") as file:
             data = orjson.loads(file.read())
 

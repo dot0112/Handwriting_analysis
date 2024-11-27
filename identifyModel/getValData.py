@@ -3,8 +3,17 @@ import random
 import concurrent.futures
 from pathlib import Path
 from tqdm import tqdm
+from dotenv import load_dotenv
+import os
 
-rootDir = Path("/tf/data/dataset/diff_shape_korean_data/data/Validation")
+load_dotenv()
+con = os.environ.get("con")
+
+rootDir = (
+    Path("/tf/data/dataset/diff_shape_korean_data/data/Validation")
+    if con == "0"
+    else Path("e:/diff_shape_korean_data/data/Validation")
+)
 subDir = Path("handWriting/char")
 
 sourceDataDir = rootDir / "source" / subDir

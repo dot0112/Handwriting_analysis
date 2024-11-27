@@ -1,12 +1,16 @@
 import orjson
-import random
 import os
 import concurrent.futures
 import numpy as np
 from pathlib import Path
 from tqdm import tqdm
+from dotenv import load_dotenv
+import os
 
-rootDir = Path("/tf/data/augment")
+load_dotenv()
+con = os.environ.get("con")
+
+rootDir = Path("/tf/data/augment") if con == "0" else Path("e:/augment_data")
 
 sourceDataDir = rootDir / "source"
 labelDataDir = rootDir / "label"
