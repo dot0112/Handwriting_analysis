@@ -182,3 +182,37 @@ def createNewPredictionModel_vgg11():
     )
 
     return model
+
+
+def createNewPredictionModel_vggStyle():
+    inputs = Input((110, 110, 1))
+
+    x = layers.Conv2D(64, (3, 3), activation="relu", padding="same")(inputs)
+    x = layers.Conv2D(64, (3, 3), activation="relu", padding="same")(x)
+    x = layers.MaxPool2D((2, 2))(x)
+
+    x = layers.Conv2D(128, (3, 3), activation="relu", padding="same")(x)
+    x = layers.Conv2D(128, (3, 3), activation="relu", padding="same")(x)
+    x = layers.MaxPool2D((2, 2))(x)
+
+    x = layers.Conv2D(256, (3, 3), activation="relu", padding="same")(x)
+    x = layers.Conv2D(256, (3, 3), activation="relu", padding="same")(x)
+    x = layers.MaxPool2D((2, 2))(x)
+
+    x = layers.Conv2D(512, (3, 3), activation="relu", padding="same")(x)
+    x = layers.Conv2D(512, (3, 3), activation="relu", padding="same")(x)
+    x = layers.MaxPool2D((2, 2))(x)
+
+    x = layers.Flatten()(x)
+    x = layers.Dense(4096, activation="relu")(x)
+    x = layers.Dense(152, activation="softmax")(x)
+
+    model = models.Model(inputs=inputs, outputs=x)
+
+    optimizer = optimizers.Adam(learning_rate=0.001)
+
+    model.compile(
+        optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"]
+    )
+
+    return model

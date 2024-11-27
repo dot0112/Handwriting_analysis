@@ -63,7 +63,7 @@ def augment_images(image_path) -> list:
         image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
 
     augmented_list = [image]
-    for _ in range(20):
+    for _ in range(5):
         # 원본 이미지를 110x110으로 리사이즈
         image_resized = cv2.resize(image, (110, 110))
         augmented_image = augment_image(image_resized)

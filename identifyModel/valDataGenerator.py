@@ -41,7 +41,7 @@ i = 0
 for idx in tqdm(range(1, 153), desc="전체 진행률", position=0, leave=True):
     idxStr = f"{idx:03d}"
     labelPaths = list(Path(wordLabelDir / idxStr).glob("*.json"))
-    random_sample = random.sample(labelPaths, min(len(labelPaths), 300))
+    random_sample = random.sample(labelPaths, min(len(labelPaths), 100))
 
     (valSourceDir / idxStr).mkdir(parents=True, exist_ok=True)
     (valLabelDir / idxStr).mkdir(parents=True, exist_ok=True)

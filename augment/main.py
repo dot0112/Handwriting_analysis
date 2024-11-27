@@ -59,14 +59,11 @@ def create_augment_file(writerNo, imagePath):
     totalCreatedCount = 0
     imageName = Path(imagePath).stem
 
-    if Path.exists(augSourceSaveDir / f"{imageName}_0.jpg"):
-        return totalCreatedCount
-
     augmented_list = augment_data.augment_images(image_path=imagePath)
 
     for idx, image in enumerate(augmented_list):
-        sourceSavePath = augSourceSaveDir / f"{imageName}_{idx}.jpg"
-        labelSavePath = augLabelSaveDir / f"{imageName}_{idx}.json"
+        sourceSavePath = augSourceSaveDir / f"{imageName}_{idx + 20}.jpg"
+        labelSavePath = augLabelSaveDir / f"{imageName}_{idx + 20}.json"
         cv2.imwrite(sourceSavePath, image)
 
         data = {

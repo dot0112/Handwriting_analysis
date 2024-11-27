@@ -48,6 +48,17 @@ if isTrain:
     print("Start training for %g epochs" % trainEpochs)
 
     def getCallbacks():
+        def lr_schedule(epoch):
+            initial_lr = 0.001
+            if epoch < 10:
+                return initial_lr
+            elif 10 <= epoch < 20:
+                return initial_lr * 0.1
+            else:
+                return initial_lr * 0.01
+
+        lr_scheduler = keras.callbacks.LearningRateScheduler(lr_schedule)
+
         checkpoint = keras.callbacks.ModelCheckpoint(
             filepath=modelPath,
             monitor="val_accuracy",
@@ -68,7 +79,7 @@ if isTrain:
 
         display_time = DisplayTimeCallback()
 
-        callbackList = [checkpoint, display_time]
+        callbackList = [checkpoint, display_time, lr_scheduler]
 
         return callbackList
 
