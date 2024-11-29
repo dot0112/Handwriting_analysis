@@ -38,27 +38,16 @@ if isTrain:
     if os.path.isfile(modelPath):
         print("Loading existing model")
         loadedModel = keras.models.load_model(modelPath)
-        model = createModel.createNewPredictionModel_vgg11()
+        model = createModel.createNewPredictionModel()
         model.set_weights(loadedModel.get_weights())
     else:
         print("Creating new model")
-        model = createModel.createNewPredictionModel_vgg11()
+        model = createModel.createNewPredictionModel()
 
     print("****************************************")
     print("Start training for %g epochs" % trainEpochs)
 
     def getCallbacks():
-        def lr_schedule(epoch):
-            initial_lr = 0.001
-            if epoch < 10:
-                return initial_lr
-            elif 10 <= epoch < 20:
-                return initial_lr * 0.1
-            else:
-                return initial_lr * 0.01
-
-        lr_scheduler = keras.callbacks.LearningRateScheduler(lr_schedule)
-
         checkpoint = keras.callbacks.ModelCheckpoint(
             filepath=modelPath,
             monitor="val_accuracy",
@@ -79,7 +68,7 @@ if isTrain:
 
         display_time = DisplayTimeCallback()
 
-        callbackList = [checkpoint, display_time, lr_scheduler]
+        callbackList = [checkpoint, display_time]
 
         return callbackList
 
@@ -104,5 +93,5 @@ if isTrain:
         validation_data=valDataset,
         epochs=trainEpochs,
         callbacks=getCallbacks(),
-        steps_per_epoch=300,
+        steps_per_epoch=100,
     )
